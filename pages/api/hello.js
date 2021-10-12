@@ -38,12 +38,29 @@ const ourSites = [
       name: 'quote',
       url:'https://rankfuse.com/request-quote/',
     },]
+  },
+  {
+    directoryName: "jubilant",
+    domain: "jubilant.com",
+    urls: [ {
+      name: 'home',
+      url:'https://jubilantdigital.com/',
+    },
+    {
+      name: 'agencies',
+      url:'https://jubilantdigital.com/for-agencies/',
+    },
+    {
+      name: 'about',
+      url:'https://jubilantdigital.com/get-to-know-jubilant/',
+    },
+  ]
   }
 ]
 
 const screenshotSites = async (sites) => {
 
-  fs.rmdirSync(path.join(process.cwd(), './public/screenshots'), { recursive: true });
+  fs.rmdirSync(path.join(process.cwd(), './screenshots'), { recursive: true });
 
   try {
     return await Promise.all(sites.map( async(site) => {
@@ -57,14 +74,14 @@ const screenshotSites = async (sites) => {
 }
 
 const createDirectory = (directory) => {
-    fs.mkdirSync(path.join(process.cwd(), `./public/screenshots/${directory}`), { recursive: true });
+    fs.mkdirSync(path.join(process.cwd(), `./screenshots/${directory}`), { recursive: true });
     return;
 }
 
 const screenshotSiteUrls = async (urls, directory) => {
   try {
     return await Promise.all(urls.map( url => {
-      return captureWebsite.file(url.url, path.join(process.cwd(), `./public/screenshots/${directory}/${url.name}.png`), { delay: 2 })
+      return captureWebsite.file(url.url, path.join(process.cwd(), `./screenshots/${directory}/${url.name}.png`), { delay: 2 })
     }))
   } catch(err) {
     console.log('screenshotSiteUrls error: ' + err);

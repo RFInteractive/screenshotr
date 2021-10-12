@@ -7,14 +7,9 @@ export default function Home() {
 
   const [status, setStatus] = useState('not sent');
 
-  useEffect(() => {
-    fetchScreenshots();
-  }, [])
-
   const fetchScreenshots = async() => {
     const response = await fetch('/api/hello');
     const data = await response.json();
-    console.log(data.status);
 
     setStatus( oldStatus => data.status);
   }
@@ -28,19 +23,17 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        { status }
+        
       </main>
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://rankfuse.com"
           target="_blank"
           rel="noopener noreferrer"
         >
           Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
+          <Image src="/rank-fuse-logo.png" alt="Vercel Logo" width={150} height={52} />
         </a>
       </footer>
     </div>
