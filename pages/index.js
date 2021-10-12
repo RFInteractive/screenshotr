@@ -1,23 +1,22 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { useState } from 'react'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { useState } from "react";
+import styles from "../styles/Home.module.css";
 
-import websites from '../lib/websites'
+import websites from "../lib/websites";
 
 export default function Home() {
+  const [status, setStatus] = useState("start");
 
-  const [status, setStatus] = useState('start');
-
-  const fetchScreenshots = async() => {
-    setStatus('loading');
+  const fetchScreenshots = async () => {
+    setStatus("loading");
     try {
-      await fetch('/api/hello');
-      setStatus('complete');
-    } catch(error) {
-      setStatus('error')
+      await fetch("/api/hello");
+      setStatus("complete");
+    } catch (error) {
+      setStatus("error");
     }
-  }
+  };
 
   return (
     <div>
@@ -32,10 +31,10 @@ export default function Home() {
           <h1>Screenshotr</h1>
         </section>
         <section className={styles.container}>
-        {status === 'loading' && showLoading()}
-        {status === 'start' && showButton(fetchScreenshots)}
-        {status === 'complete' && showImages(fetchScreenshots)}
-        {status === 'error' && showError(status)}
+          {status === "loading" && showLoading()}
+          {status === "start" && showButton(fetchScreenshots)}
+          {status === "complete" && showImages(fetchScreenshots)}
+          {status === "error" && showError(status)}
         </section>
       </main>
 
@@ -45,68 +44,75 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <Image src="/rank-fuse-logo.png" alt="Vercel Logo" width={150} height={52} />
+          Powered by{" "}
+          <Image
+            src="/rank-fuse-logo.png"
+            alt="Vercel Logo"
+            width={150}
+            height={52}
+          />
         </a>
       </footer>
     </div>
-  )
+  );
 }
 
 const showLoading = () => {
-  return(
-    <h2>Sending request...</h2>
-  )
-}
+  return <h2>Sending request...</h2>;
+};
 
 const showError = (status) => {
   return (
     <>
       <h2>Something appears to have gone wrong</h2>
-      <p>{ status }</p>
+      <p>{status}</p>
     </>
-  )
-}
+  );
+};
 
 const showButton = (fetchScreenshots) => {
   return (
     <button className={styles.screenshotBtn} onClick={fetchScreenshots}>
       Screenshot Our Sites
     </button>
-  )
-}
+  );
+};
 
 const showImages = (fetchScreenshots) => {
   return (
     <div className={styles.imagesContainer}>
-      { 
-        websites.map(website => {
-          return (
-            <div className={styles.websiteRow} key={website.domain}>
-              <h2>{ website.domain }</h2>
-              <div className={styles.websiteImages}>
-                {
-                  website.urls.map(url => {
-                    return (
-                      <div key={url.name}>
-                        <a href={url.url}>
-                          <img src={`/static/screenshots/${website.directoryName}/${url.name}.png`}/>
-                        </a>
-                        <h4>
-                          <a href={url.url}> { url.url } </a>
-                        </h4>
-                      </div>
-                    )
-                  })
-                }
-              </div>
+      {websites.map((website) => {
+        return (
+          <div className={styles.websiteRow} key={website.domain}>
+            <h2>{website.domain}</h2>
+            <div className={styles.websiteImages}>
+              {website.urls.map((url) => {
+                return (
+                  <div key={url.name}>
+                    <a href={url.url} target="_blank">
+                      <img
+                        src={`/static/screenshots/${website.directoryName}/${url.name}.png`}
+                      />
+                    </a>
+                    <h4>
+                      <a href={url.url} target="_blank">
+                        {" "}
+                        {url.url}{" "}
+                      </a>
+                    </h4>
+                  </div>
+                );
+              })}
             </div>
-          )
-        })
-      } 
-      <button className={`${styles.screenshotBtn} ${styles.screenshotBtnFixed}`} onClick={fetchScreenshots}>
+          </div>
+        );
+      })}
+      <button
+        className={`${styles.screenshotBtn} ${styles.screenshotBtnFixed}`}
+        onClick={fetchScreenshots}
+      >
         Re-run Screenshots
       </button>
     </div>
-  )
-}
+  );
+};
