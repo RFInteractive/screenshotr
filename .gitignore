@@ -14,7 +14,7 @@
 
 # production
 /build
-/screenshots
+/public/static/screenshots
 
 # misc
 .DS_Store

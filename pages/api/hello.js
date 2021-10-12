@@ -4,67 +4,23 @@ import path from 'path';
 import captureWebsite from 'capture-website';
 import fs from 'fs';
 
+import websites from '../../lib/websites';
+
 const handler = nc().get(async (req, res) => {
-
-  // delete child directories in /screenshots
-  // loop through array of websites
-  // create directory in screenshots for each website
-  // screenshot each site with proper path
-  // respond with ok
-
-    await screenshotSites(ourSites);
+    await screenshotSites(websites);
     res.json({ status: 'all donezo!'});
 });
 
 export default handler;
 
-const ourSites = [
-  {
-    directoryName: "rank-fuse",
-    domain: "rankfuse.com",
-    urls: [ {
-      name: 'home',
-      url:'https://rankfuse.com',
-    },
-    {
-      name: 'seo',
-      url:'https://rankfuse.com/services/search-engine-marketing-sem/',
-    },
-    {
-      name: 'contact',
-      url:'https://rankfuse.com/contact-us/',
-    },
-    {
-      name: 'quote',
-      url:'https://rankfuse.com/request-quote/',
-    },]
-  },
-  {
-    directoryName: "jubilant",
-    domain: "jubilant.com",
-    urls: [ {
-      name: 'home',
-      url:'https://jubilantdigital.com/',
-    },
-    {
-      name: 'agencies',
-      url:'https://jubilantdigital.com/for-agencies/',
-    },
-    {
-      name: 'about',
-      url:'https://jubilantdigital.com/get-to-know-jubilant/',
-    },
-  ]
-  }
-]
-
 const screenshotSites = async (sites) => {
 
-  fs.rmdirSync(path.join(process.cwd(), './screenshots'), { recursive: true });
+  fs.rmdirSync(path.join(process.cwd(), './public/static/screenshots/'), { recursive: true });
 
   try {
     return await Promise.all(sites.map( async(site) => {
-        createDirectory(site.directoryName);
+        checkForScreenshotDirectory();
+        createSiteDirectory(site.directoryName);
         await screenshotSiteUrls(site.urls, site.directoryName);
       }))
   } catch(outerError) {
@@ -73,15 +29,23 @@ const screenshotSites = async (sites) => {
 
 }
 
-const createDirectory = (directory) => {
-    fs.mkdirSync(path.join(process.cwd(), `./screenshots/${directory}`), { recursive: true });
+const checkForScreenshotDirectory = () => {
+  if(!fs.existsSync(path.join(process.cwd(), `./public/static/screenshots`))) {
+    fs.mkdirSync(path.join(process.cwd(), `./public/static/screenshots`));
+    return;
+  }
+  return;
+}
+
+const createSiteDirectory = (directory) => {
+    fs.mkdirSync(path.join(process.cwd(), `./public/static/screenshots/${directory}`), { recursive: true });
     return;
 }
 
 const screenshotSiteUrls = async (urls, directory) => {
   try {
     return await Promise.all(urls.map( url => {
-      return captureWebsite.file(url.url, path.join(process.cwd(), `./screenshots/${directory}/${url.name}.png`), { delay: 2 })
+      return captureWebsite.file(url.url, path.join(process.cwd(), `./public/static/screenshots/${directory}/${url.name}.png`), { delay: 2 })
     }))
   } catch(err) {
     console.log('screenshotSiteUrls error: ' + err);
