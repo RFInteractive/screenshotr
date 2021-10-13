@@ -6,28 +6,19 @@ import fs from 'fs';
 
 import websites from '../../lib/websites';
 
-const handler = nc().get(async (req, res) => {
+const handler = nc().get(async (_, res) => {
+  try {
+    checkForScreenshotDirectory();
+    clearScreenshotDirectory();
     await screenshotSites(websites);
-    res.json({ status: 'all donezo!'});
+    res.status(200).end('complete')
+  } catch(error) {
+    res.status(500).end(err.toString());
+  }
+
 });
 
 export default handler;
-
-const screenshotSites = async (sites) => {
-
-  fs.rmdirSync(path.join(process.cwd(), './public/static/screenshots/'), { recursive: true });
-
-  try {
-    return await Promise.all(sites.map( async(site) => {
-        checkForScreenshotDirectory();
-        createSiteDirectory(site.directoryName);
-        await screenshotSiteUrls(site.urls, site.directoryName);
-      }))
-  } catch(outerError) {
-    console.log('screenshotSites error: '+ outerError)
-  }
-
-}
 
 const checkForScreenshotDirectory = () => {
   if(!fs.existsSync(path.join(process.cwd(), `./public/static/screenshots`))) {
@@ -37,17 +28,34 @@ const checkForScreenshotDirectory = () => {
   return;
 }
 
+const clearScreenshotDirectory = () => {
+  fs.rmdirSync(path.join(process.cwd(), './public/static/screenshots/'), { recursive: true });
+}
+
+const screenshotSites = async (sites) => {
+
+  return await Promise.all(sites.map( async(site) => {
+    createSiteDirectory(site.directoryName);
+    await screenshotUrls(site.urls, site.directoryName);
+  }))
+
+}
+
 const createSiteDirectory = (directory) => {
-    fs.mkdirSync(path.join(process.cwd(), `./public/static/screenshots/${directory}`), { recursive: true });
+    fs.mkdirSync(path.join(
+      process.cwd(), 
+      `./public/static/screenshots/${directory}`), 
+      { recursive: true }
+    );
     return;
 }
 
-const screenshotSiteUrls = async (urls, directory) => {
-  try {
+const screenshotUrls = async (urls, directory) => {
     return await Promise.all(urls.map( url => {
-      return captureWebsite.file(url.url, path.join(process.cwd(), `./public/static/screenshots/${directory}/${url.name}.png`), { delay: 2 })
+      return captureWebsite.file(
+        url.url, path.join(process.cwd(), 
+        `./public/static/screenshots/${directory}/${url.name}.png`), 
+        { delay: 2 }
+        )
     }))
-  } catch(err) {
-    console.log('screenshotSiteUrls error: ' + err);
-  }
 }
