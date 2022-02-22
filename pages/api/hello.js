@@ -34,16 +34,24 @@ const clearScreenshotDirectory = () => {
 }
 
 const createSiteDirectories = (sites) => {
-  sites.forEach( site => 
-    fs.mkdirSync(path.join(process.cwd(), `./public/static/screenshots/${site.directoryName}`), { recursive: true })
+  const siteDirArray = sites.reduce((accum, value) => accum.concat(value.directoryName), []);
+
+  const uniqueDirs = [...new Set(siteDirArray)];
+
+  uniqueDirs.forEach( site => 
+    fs.mkdirSync(path.join(process.cwd(), `./public/static/screenshots/${site}`), { recursive: true })
   );
   return;
 }
 
 const screenshotSites = async (sites) => {
 
-  return await Promise.all(sites.map( async(site) => {
-    await screenshotUrls(site.urls, site.directoryName);
+  return await Promise.all(sites.map(async (site) => {
+    return captureWebsite.file(
+      site.url, path.join(process.cwd(), 
+      `./public/static/screenshots/${site.directoryName}/${site.name}.png`), 
+      { delay: 2 }
+      )
   }))
 
 }

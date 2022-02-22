@@ -67,21 +67,18 @@
   right: 50px;
 }
 
-.websiteRow {
-  margin: 75px 0px;
+.imagesContainer {
+  margin: 100px 0px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 65px;
 }
 
-.websiteRow h2 {
+.imagesContainer h2 {
   text-align: center;
   font-size: 36px;
   margin-bottom: 30px;
   color: #2F495E;
-}
-
-.websiteImages {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 50px;
 }
 
 .websiteImages img {
@@ -91,6 +88,17 @@
   margin-bottom: 10px
 }
 
-.websiteImages h4 {
+.websiteImages h4,
+.websiteImages h3,
+.websiteImages h2 {
   text-align: center;
+}
+
+.websiteImages h2 {
+  font-size: 28px;
+}
+
+.websiteImages h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
 }

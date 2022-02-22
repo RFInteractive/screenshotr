@@ -83,26 +83,22 @@ const showImages = (fetchScreenshots) => {
     <div className={styles.imagesContainer}>
       {websites.map((website) => {
         return (
-          <div className={styles.websiteRow} key={website.domain}>
-            <h2>{website.domain}</h2>
+          <div key={website.domain}>
             <div className={styles.websiteImages}>
-              {website.urls.map((url) => {
-                return (
-                  <div key={url.name}>
-                    <a href={url.url} target="_blank">
+                  <div key={website.name}>
+                  <h2>{website.domain}</h2>
+                    <a href={website.url} target="_blank">
                       <img
-                        src={`/static/screenshots/${website.directoryName}/${url.name}.png`}
+                        src={`/static/screenshots/${website.directoryName}/${website.name}.png`}
                       />
                     </a>
+                    <h3>{website.name}</h3>
                     <h4>
-                      <a href={url.url} target="_blank">
-                        {" "}
-                        {url.url}{" "}
+                      <a href={website.url} target="_blank">
+                        {website.url}{" "}
                       </a>
                     </h4>
                   </div>
-                );
-              })}
             </div>
           </div>
         );
